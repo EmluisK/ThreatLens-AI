@@ -1,0 +1,27 @@
+2026-05-09 08:01:12 INFO sshd[1842]: Accepted publickey for deploy from 192.168.1.10 port 22
+2026-05-09 08:01:45 INFO nginx: GET /api/health 200 12ms
+2026-05-09 08:02:10 INFO nginx: GET /dashboard 200 45ms
+2026-05-09 08:02:33 INFO nginx: POST /api/login 200 88ms
+2026-05-09 08:03:01 INFO sshd[1843]: Accepted publickey for admin from 192.168.1.15 port 22
+2026-05-09 08:04:22 WARNING kernel: possible SYN flood on port 443 from 45.33.32.156
+2026-05-09 08:04:23 WARNING kernel: possible SYN flood on port 443 from 45.33.32.156
+2026-05-09 08:04:24 WARNING kernel: possible SYN flood on port 443 from 45.33.32.156
+2026-05-09 08:04:25 CRITICAL firewall: DENIED inbound connection from 45.33.32.156:4444 to 0.0.0.0:443
+2026-05-09 08:04:26 CRITICAL firewall: DENIED inbound connection from 45.33.32.156:4444 to 0.0.0.0:443
+2026-05-09 08:05:00 INFO nginx: GET /api/metrics 200 9ms
+2026-05-09 08:05:44 ERROR sshd[1901]: Failed password for root from 203.0.113.42 port 51234 ssh2
+2026-05-09 08:05:45 ERROR sshd[1902]: Failed password for root from 203.0.113.42 port 51235 ssh2
+2026-05-09 08:05:46 ERROR sshd[1903]: Failed password for root from 203.0.113.42 port 51236 ssh2
+2026-05-09 08:05:47 ERROR sshd[1904]: Failed password for root from 203.0.113.42 port 51237 ssh2
+2026-05-09 08:05:48 ERROR sshd[1905]: Failed password for root from 203.0.113.42 port 51238 ssh2
+2026-05-09 08:05:49 CRITICAL sshd[1906]: POSSIBLE BREAK-IN ATTEMPT from 203.0.113.42
+2026-05-09 08:06:10 INFO nginx: GET /api/health 200 11ms
+2026-05-09 08:06:45 INFO cron: backup job completed successfully
+2026-05-09 08:07:02 WARNING auditd: file integrity check failed on /etc/passwd from 10.0.0.88
+2026-05-09 08:07:03 ERROR auditd: unauthorized write attempt to /etc/shadow from pid 9921 user www-data
+2026-05-09 08:07:30 INFO nginx: GET /dashboard 200 52ms
+2026-05-09 08:08:11 INFO sshd[1910]: Accepted publickey for deploy from 192.168.1.10 port 22
+2026-05-09 08:09:00 CRITICAL ids: port scan detected from 198.51.100.7 targeting ports 22,80,443,3306,5432
+2026-05-09 08:09:01 CRITICAL ids: port scan detected from 198.51.100.7 targeting ports 22,80,443,3306,5432
+2026-05-09 08:09:45 ERROR nginx: upstream timed out connecting to 127.0.0.1:8000
+2026-05-09 08:10:00 INFO nginx: GET /api/health 200 10ms

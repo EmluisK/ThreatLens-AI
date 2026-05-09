@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --navy-950: #050810;
+  --navy-900: #080d1a;
+  --navy-800: #0d1526;
+  --navy-700: #111d33;
+  --navy-600: #162240;
+  --border: #1a2845;
+  --border-soft: #142038;
+  --text-primary: #d4dff5;
+  --text-secondary: #7a90b8;
+  --text-muted: #3d5278;
+  --amber: #e8a020;
+  --amber-dim: rgba(232, 160, 32, 0.12);
+  --amber-border: rgba(232, 160, 32, 0.25);
+}
+
+body {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  background-color: var(--navy-950);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
