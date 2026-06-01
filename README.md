@@ -226,6 +226,13 @@ Tokens expire after 60 minutes by default, so for long-running agents you should
 
 Team documentation, personal logs, and project design pages are in the [Wiki](../../wiki).
 
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+
 ## Branching
 
 Feature branches follow the naming convention `feature/name-or-feature`. Do not commit directly to main.
