@@ -27,6 +27,23 @@
         "infra",
         "research"
       ]
+    },
+    {
+      "login": "testtesttest90",
+      "name": "testtesttest90",
+      "avatar_url": "https://avatars.githubusercontent.com/u/271585116?v=4",
+      "profile": "https://github.com/testtesttest90",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas",
+        "design",
+        "test",
+        "bug",
+        "review",
+        "infra",
+        "research"
+      ]
     }
   ],
   "commitType": "docs",
