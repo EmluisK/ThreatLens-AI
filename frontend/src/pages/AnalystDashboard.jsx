@@ -20,6 +20,14 @@ const severityStyle = {
   critical: { color: '#f87171', border: 'rgba(248,113,113,0.25)', bg: 'rgba(248,113,113,0.07)' },
 }
 
+const familyStyle = {
+  Mirai:     { color: '#f87171', border: 'rgba(248,113,113,0.3)', bg: 'rgba(248,113,113,0.07)' },
+  DarkNexus: { color: '#c084fc', border: 'rgba(192,132,252,0.3)', bg: 'rgba(192,132,252,0.07)' },
+  Gafgyt:    { color: '#fb923c', border: 'rgba(251,146,60,0.3)',  bg: 'rgba(251,146,60,0.07)'  },
+  Generic:   { color: '#94a3b8', border: 'rgba(148,163,184,0.3)', bg: 'rgba(148,163,184,0.07)' },
+  Benign:    { color: '#4ade80', border: 'rgba(74,222,128,0.3)',  bg: 'rgba(74,222,128,0.07)'  },
+}
+
 function SeverityBadge({ severity }) {
   const s = severityStyle[severity] || {}
   return (
@@ -28,6 +36,19 @@ function SeverityBadge({ severity }) {
       padding: '2px 7px', border: `1px solid ${s.border}`, color: s.color, background: s.bg,
     }}>
       {severity?.toUpperCase()}
+    </span>
+  )
+}
+
+function FamilyBadge({ family }) {
+  if (!family) return null
+  const s = familyStyle[family] || { color: '#94a3b8', border: 'rgba(148,163,184,0.3)', bg: 'rgba(148,163,184,0.07)' }
+  return (
+    <span style={{
+      fontFamily: 'IBM Plex Mono', fontSize: '10px', letterSpacing: '0.06em',
+      padding: '2px 7px', border: `1px solid ${s.border}`, color: s.color, background: s.bg,
+    }}>
+      {family.toUpperCase()}
     </span>
   )
 }
@@ -51,7 +72,7 @@ function ActiveAlerts() {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
             <thead>
               <tr style={{ background: 'var(--navy-800)' }}>
-                {['ID', 'SEVERITY', 'STATUS', 'MESSAGE', 'TIMESTAMP'].map((h) => (
+                {['ID', 'SEVERITY', 'FAMILY', 'STATUS', 'MESSAGE', 'TIMESTAMP'].map((h) => (
                   <th key={h} style={{ padding: '8px 14px', textAlign: 'left', fontFamily: 'IBM Plex Mono', fontSize: '10px', letterSpacing: '0.08em', color: 'var(--text-muted)', borderBottom: '1px solid var(--border)', fontWeight: 400 }}>{h}</th>
                 ))}
               </tr>
@@ -67,8 +88,9 @@ function ActiveAlerts() {
                 >
                   <td style={{ padding: '8px 14px', fontFamily: 'IBM Plex Mono', fontSize: '11px', color: 'var(--text-muted)' }}>{a.id}</td>
                   <td style={{ padding: '8px 14px' }}><SeverityBadge severity={a.severity} /></td>
+                  <td style={{ padding: '8px 14px' }}><FamilyBadge family={a.malware_family} /></td>
                   <td style={{ padding: '8px 14px', fontFamily: 'IBM Plex Mono', fontSize: '11px', color: 'var(--text-muted)' }}>{a.status}</td>
-                  <td style={{ padding: '8px 14px', color: 'var(--text-secondary)', maxWidth: '360px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.message}</td>
+                  <td style={{ padding: '8px 14px', color: 'var(--text-secondary)', maxWidth: '320px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.message}</td>
                   <td style={{ padding: '8px 14px', fontFamily: 'IBM Plex Mono', fontSize: '11px', color: 'var(--text-muted)' }}>{new Date(a.created_at).toLocaleString()}</td>
                 </tr>
               ))}

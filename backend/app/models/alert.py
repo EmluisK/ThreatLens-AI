@@ -22,10 +22,11 @@ class Alert(Base):
     __tablename__ = "alerts"
 
     id = Column(Integer, primary_key=True, index=True)
-    log_id = Column(Integer, ForeignKey("logs.id"), nullable=False)
+    log_id = Column(Integer, ForeignKey("logs.id"), nullable=True)
     severity = Column(Enum(AlertSeverity), nullable=False, default=AlertSeverity.low)
     status = Column(Enum(AlertStatus), nullable=False, default=AlertStatus.open)
     message = Column(Text, nullable=False)
+    malware_family = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     log = relationship("Log", back_populates="alerts")
