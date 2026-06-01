@@ -11,7 +11,7 @@ Three user roles are supported: Security Admin, SOC Analyst, and Viewer, each wi
 | Frontend | React + Vite + Tailwind CSS |
 | Backend | Python + FastAPI |
 | Database | PostgreSQL |
-| AI/ML | Ollama (local LLM) + scikit-learn |
+| AI/ML | Ollama (local LLM) + scikit-learn + LightGBM |
 
 ## Project Structure
 
@@ -111,6 +111,62 @@ The core flow is:
 3. An analyst opens the alert in the Triage Console and runs AI triage
 4. The local LLM analyzes the flagged line with surrounding log context and returns a plain-language summary and remediation steps
 5. Viewers can monitor the overall alert status from their read-only dashboard
+
+## IoT Malware Classification
+
+ThreatLens includes a LightGBM-based classifier for IoT malware detection trained on the CIC-YNU-IoTMal dataset. It classifies IoT binaries into five families: Benign, Mirai, DarkNexus, Gafgyt, and Generic, using behavioral feature vectors derived from network captures (pcap), system activity reports (SAR), and syscall traces (strace).
+
+### Model setup
+
+The model artifacts are not included in the repository. To generate them, run all cells in `iot_malware_detection.ipynb`. The notebook requires the CIC-YNU-IoTMal dataset placed at `data/work/samples/` as 12 parquet files (`arm_pcap.parquet`, `mips_pcap.parquet`, etc., one per architecture per modality). After training, the notebook exports `iot_fusion_model.txt` and `iot_meta.json` to `backend/app/ml_artifacts/`. The backend loads them automatically on startup.
+
+You can check whether the model is loaded:
+
+```bash
+curl http://localhost:8000/ingest/iot/status \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+### Submitting an IoT sample
+
+```bash
+curl -X POST http://localhost:8000/ingest/iot \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "hash": "abc123def456",
+    "arch": "arm",
+    "source": "iot-sandbox",
+    "features": {
+      "strace_Call_connect": 12500,
+      "strace_Call_send": 8200,
+      "pcap_Rate_mean": 950.0
+    }
+  }'
+```
+
+The response includes the predicted family, confidence score, per-class probabilities, and the ID of the alert created:
+
+```json
+{
+  "alert_id": 12,
+  "family": "Mirai",
+  "confidence": 0.997,
+  "severity": "critical",
+  "model_ready": true,
+  "probabilities": {
+    "Benign": 0.001,
+    "DarkNexus": 0.001,
+    "Gafgyt": 0.0,
+    "Generic": 0.001,
+    "Mirai": 0.997
+  }
+}
+```
+
+Severity is derived from the predicted family and confidence. Mirai and DarkNexus map to critical, Gafgyt and Generic to high, and Benign to low. If the model artifacts are not present the endpoint still accepts submissions but returns low severity and marks `model_ready: false`.
+
+The Admin dashboard includes an IoT Classifier tab where you can submit feature payloads through the UI and view classification results. The Audit Log table shows a FAMILY column for all IoT-sourced alerts.
 
 ## External Log Ingestion API
 
