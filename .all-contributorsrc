@@ -27,6 +27,23 @@
         "infra",
         "research"
       ]
+    },
+    {
+      "login": "franceskoh",
+      "name": "franceskoh",
+      "avatar_url": "https://avatars.githubusercontent.com/u/147883638?v=4",
+      "profile": "https://github.com/franceskoh",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas",
+        "design",
+        "test",
+        "bug",
+        "review",
+        "infra",
+        "research"
+      ]
     }
   ],
   "commitType": "docs",
