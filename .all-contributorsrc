@@ -27,6 +27,23 @@
         "infra",
         "research"
       ]
+    },
+    {
+      "login": "sakenox",
+      "name": "sakenox",
+      "avatar_url": "https://avatars.githubusercontent.com/u/127430132?v=4",
+      "profile": "https://github.com/sakenox",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas",
+        "design",
+        "test",
+        "bug",
+        "review",
+        "infra",
+        "research"
+      ]
     }
   ],
   "commitType": "docs",
