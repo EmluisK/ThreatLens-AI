@@ -230,6 +230,19 @@ Team documentation, personal logs, and project design pages are in the [Wiki](..
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/emluis"><img src="https://avatars.githubusercontent.com/u/2083824?v=4?s=100" width="100px;" alt="Eduardo Luís"/><br /><sub><b>Eduardo Luís</b></sub></a><br /><a href="https://github.com/EmluisK/ThreatLens-AI/commits?author=Emluis" title="Code">💻</a> <a href="https://github.com/EmluisK/ThreatLens-AI/commits?author=Emluis" title="Documentation">📖</a> <a href="#ideas-Emluis" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-Emluis" title="Design">🎨</a> <a href="https://github.com/EmluisK/ThreatLens-AI/commits?author=Emluis" title="Tests">⚠️</a> <a href="https://github.com/EmluisK/ThreatLens-AI/issues?q=author%3AEmluis" title="Bug reports">🐛</a> <a href="https://github.com/EmluisK/ThreatLens-AI/pulls?q=is%3Apr+reviewed-by%3AEmluis" title="Reviewed Pull Requests">👀</a> <a href="#infra-Emluis" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#research-Emluis" title="Research">🔬</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 
