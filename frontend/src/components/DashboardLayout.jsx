@@ -7,6 +7,7 @@ const navItems = {
     { label: 'Users', path: '/admin/users' },
     { label: 'Upload Logs', path: '/admin/logs' },
     { label: 'Audit Log', path: '/admin/audit' },
+    { label: 'IoT Classifier', path: '/admin/iot' },
   ],
   analyst: [
     { label: 'Active Alerts', path: '/analyst' },

@@ -22,7 +22,7 @@ def list_alerts(
 ):
     alerts = db.query(Alert).order_by(Alert.created_at.desc()).all()
     return [
-        {"id": a.id, "log_id": a.log_id, "severity": a.severity, "status": a.status, "message": a.message, "created_at": a.created_at}
+        {"id": a.id, "log_id": a.log_id, "severity": a.severity, "status": a.status, "message": a.message, "malware_family": a.malware_family, "created_at": a.created_at}
         for a in alerts
     ]
 

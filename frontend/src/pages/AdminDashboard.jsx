@@ -247,6 +247,24 @@ const severityStyle = {
   critical: { color: '#f87171', border: 'rgba(248,113,113,0.2)' },
 }
 
+const familyStyle = {
+  Mirai:     { color: '#f87171', border: 'rgba(248,113,113,0.3)' },
+  DarkNexus: { color: '#c084fc', border: 'rgba(192,132,252,0.3)' },
+  Gafgyt:    { color: '#fb923c', border: 'rgba(251,146,60,0.3)'  },
+  Generic:   { color: '#94a3b8', border: 'rgba(148,163,184,0.3)' },
+  Benign:    { color: '#4ade80', border: 'rgba(74,222,128,0.3)'  },
+}
+
+function FamilyBadge({ family }) {
+  if (!family) return null
+  const s = familyStyle[family] || { color: '#94a3b8', border: 'rgba(148,163,184,0.3)' }
+  return (
+    <span style={{ fontFamily: 'IBM Plex Mono', fontSize: '10px', letterSpacing: '0.06em', padding: '2px 7px', border: `1px solid ${s.border}`, color: s.color }}>
+      {family.toUpperCase()}
+    </span>
+  )
+}
+
 function AuditLog() {
   const [alerts, setAlerts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -260,7 +278,7 @@ function AuditLog() {
         <p style={{ fontFamily: 'IBM Plex Mono', fontSize: '12px', color: 'var(--text-muted)' }}>LOADING...</p>
       ) : (
         <TableWrap>
-          <thead><tr><Th>ID</Th><Th>SEVERITY</Th><Th>STATUS</Th><Th>MESSAGE</Th><Th>TIMESTAMP</Th></tr></thead>
+          <thead><tr><Th>ID</Th><Th>SEVERITY</Th><Th>FAMILY</Th><Th>STATUS</Th><Th>MESSAGE</Th><Th>TIMESTAMP</Th></tr></thead>
           <tbody>
             {alerts.map((a) => {
               const s = severityStyle[a.severity] || {}
@@ -270,14 +288,104 @@ function AuditLog() {
                   <Td>
                     <span style={{ fontFamily: 'IBM Plex Mono', fontSize: '10px', letterSpacing: '0.08em', padding: '2px 7px', border: `1px solid ${s.border}`, color: s.color }}>{a.severity.toUpperCase()}</span>
                   </Td>
+                  <Td><FamilyBadge family={a.malware_family} /></Td>
                   <Td mono style={{ color: 'var(--text-muted)' }}>{a.status}</Td>
-                  <Td style={{ maxWidth: '320px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.message}</Td>
+                  <Td style={{ maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.message}</Td>
                   <Td mono style={{ color: 'var(--text-muted)', fontSize: '11px' }}>{new Date(a.created_at).toLocaleString()}</Td>
                 </tr>
               )
             })}
           </tbody>
         </TableWrap>
+      )}
+    </div>
+  )
+}
+
+function IoTClassifier() {
+  const [status, setStatus] = useState(null)
+  const [result, setResult] = useState(null)
+  const [payload, setPayload] = useState('{\n  "hash": "abc123",\n  "arch": "arm",\n  "features": {\n    "strace_Call_connect": 12500,\n    "strace_Call_send": 8200,\n    "pcap_Rate_mean": 950.0\n  }\n}')
+  const [submitting, setSubmitting] = useState(false)
+  const [parseError, setParseError] = useState('')
+
+  useEffect(() => {
+    api.get('/ingest/iot/status').then((r) => setStatus(r.data)).catch(() => setStatus({ model_ready: false, message: 'Could not reach backend.' }))
+  }, [])
+
+  async function submitSample(e) {
+    e.preventDefault()
+    setParseError('')
+    setResult(null)
+    let parsed
+    try { parsed = JSON.parse(payload) } catch { setParseError('Invalid JSON'); return }
+    setSubmitting(true)
+    try {
+      const res = await api.post('/ingest/iot', parsed)
+      setResult(res.data)
+    } catch (err) {
+      setParseError(err.response?.data?.detail || 'Submission failed')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const probColors = { Mirai: '#f87171', DarkNexus: '#c084fc', Gafgyt: '#fb923c', Generic: '#94a3b8', Benign: '#4ade80' }
+
+  return (
+    <div style={{ padding: '1.75rem 2rem', maxWidth: '640px' }}>
+      {sectionHeader('IoT Malware Classifier', 'Submit behavioural feature vectors for LightGBM family classification')}
+
+      <div style={{ border: '1px solid var(--border)', background: 'var(--navy-900)', padding: '1rem 1.25rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: status?.model_ready ? '#4ade80' : '#f87171', boxShadow: status?.model_ready ? '0 0 6px #4ade80' : '0 0 6px #f87171', flexShrink: 0 }} />
+        <span style={{ fontFamily: 'IBM Plex Mono', fontSize: '11px', color: 'var(--text-secondary)' }}>
+          {status ? status.message : 'Checking model status...'}
+        </span>
+      </div>
+
+      <form onSubmit={submitSample} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div>
+          <div style={{ fontFamily: 'IBM Plex Mono', fontSize: '10px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginBottom: '6px' }}>FEATURE PAYLOAD (JSON)</div>
+          <textarea
+            value={payload}
+            onChange={(e) => setPayload(e.target.value)}
+            rows={10}
+            style={{ width: '100%', background: 'var(--navy-800)', border: '1px solid var(--border)', color: 'var(--text-primary)', padding: '10px 12px', fontFamily: 'IBM Plex Mono', fontSize: '12px', outline: 'none', resize: 'vertical', lineHeight: 1.6, boxSizing: 'border-box' }}
+          />
+        </div>
+        {parseError && <p style={{ fontFamily: 'IBM Plex Mono', fontSize: '11px', color: '#f87171' }}>{parseError}</p>}
+        <button type="submit" disabled={submitting} style={{ background: submitting ? 'rgba(232,160,32,0.4)' : 'var(--amber)', border: 'none', color: 'var(--navy-950)', padding: '9px', fontFamily: 'IBM Plex Mono', fontSize: '11px', letterSpacing: '0.1em', cursor: submitting ? 'not-allowed' : 'pointer', fontWeight: 500 }}>
+          {submitting ? 'CLASSIFYING...' : 'SUBMIT SAMPLE'}
+        </button>
+      </form>
+
+      {result && (
+        <div style={{ marginTop: '1.25rem', border: '1px solid var(--border)', background: 'var(--navy-900)' }}>
+          <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--border)', background: 'var(--navy-800)', display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+            <span style={{ fontFamily: 'IBM Plex Mono', fontSize: '10px', letterSpacing: '0.08em', color: 'var(--text-muted)' }}>
+              ALERT <span style={{ color: 'var(--text-secondary)' }}>#{result.alert_id}</span>
+            </span>
+            <span style={{ fontFamily: 'IBM Plex Mono', fontSize: '10px', letterSpacing: '0.08em', color: 'var(--text-muted)' }}>
+              FAMILY <span style={{ color: probColors[result.family] || 'var(--text-secondary)' }}>{result.family?.toUpperCase()}</span>
+            </span>
+            <span style={{ fontFamily: 'IBM Plex Mono', fontSize: '10px', letterSpacing: '0.08em', color: 'var(--text-muted)' }}>
+              CONFIDENCE <span style={{ color: 'var(--text-secondary)' }}>{(result.confidence * 100).toFixed(1)}%</span>
+            </span>
+          </div>
+          {result.probabilities && (
+            <div style={{ padding: '1rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {Object.entries(result.probabilities).sort((a, b) => b[1] - a[1]).map(([fam, prob]) => (
+                <div key={fam} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontFamily: 'IBM Plex Mono', fontSize: '10px', color: probColors[fam] || 'var(--text-muted)', width: '80px' }}>{fam}</span>
+                  <div style={{ flex: 1, height: '4px', background: 'var(--navy-800)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <div style={{ width: `${(prob * 100).toFixed(1)}%`, height: '100%', background: probColors[fam] || 'var(--text-muted)', transition: 'width 0.4s ease' }} />
+                  </div>
+                  <span style={{ fontFamily: 'IBM Plex Mono', fontSize: '10px', color: 'var(--text-muted)', width: '42px', textAlign: 'right' }}>{(prob * 100).toFixed(1)}%</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       )}
     </div>
   )
@@ -291,6 +399,7 @@ export default function AdminDashboard() {
         <Route path="/users" element={<Users />} />
         <Route path="/logs" element={<UploadLogs />} />
         <Route path="/audit" element={<AuditLog />} />
+        <Route path="/iot" element={<IoTClassifier />} />
       </Routes>
     </DashboardLayout>
   )
