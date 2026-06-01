@@ -27,6 +27,23 @@
         "infra",
         "research"
       ]
+    },
+    {
+      "login": "gzekthi",
+      "name": "gzekthi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44680669?v=4",
+      "profile": "https://github.com/gzekthi",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas",
+        "design",
+        "test",
+        "bug",
+        "review",
+        "infra",
+        "research"
+      ]
     }
   ],
   "commitType": "docs",
